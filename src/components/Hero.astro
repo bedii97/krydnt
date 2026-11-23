@@ -1,0 +1,349 @@
+---
+import type { SupportedLocale } from '../i18n/config';
+import { useTranslations, getLocalizedPath } from '../i18n/utils';
+import { Sparkles, ArrowRight, ShieldCheck, Award, Activity, ChevronLeft, ChevronRight, CheckCircle2 } from '@lucide/astro';
+
+interface Props {
+  lang: SupportedLocale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const slides = [
+  {
+    id: 1,
+    tag: t('carousel.slide1.tag'),
+    title: t('carousel.slide1.title'),
+    desc: t('carousel.slide1.desc'),
+    feature: t('carousel.slide1.feature'),
+    gradient: 'from-cyan-600/30 via-teal-500/20 to-sky-600/10',
+    accentColor: 'text-cyan-500 dark:text-cyan-400',
+    badgeBg: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border-cyan-500/30',
+    icon: 'smile',
+  },
+  {
+    id: 2,
+    tag: t('carousel.slide2.tag'),
+    title: t('carousel.slide2.title'),
+    desc: t('carousel.slide2.desc'),
+    feature: t('carousel.slide2.feature'),
+    gradient: 'from-teal-600/30 via-emerald-500/20 to-cyan-600/10',
+    accentColor: 'text-teal-500 dark:text-teal-400',
+    badgeBg: 'bg-teal-500/15 text-teal-700 dark:text-teal-300 border-teal-500/30',
+    icon: 'implant',
+  },
+  {
+    id: 3,
+    tag: t('carousel.slide3.tag'),
+    title: t('carousel.slide3.title'),
+    desc: t('carousel.slide3.desc'),
+    feature: t('carousel.slide3.feature'),
+    gradient: 'from-sky-600/30 via-indigo-500/20 to-teal-600/10',
+    accentColor: 'text-sky-500 dark:text-sky-400',
+    badgeBg: 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30',
+    icon: 'aligner',
+  },
+];
+---
+
+<section class="relative pt-10 pb-16 lg:pt-16 lg:pb-24 overflow-hidden">
+  
+  <!-- Ambient background glow blobs -->
+  <div class="hero-glow-blob w-[350px] sm:w-[550px] h-[350px] sm:h-[550px] bg-cyan-500/20 dark:bg-cyan-500/15 top-10 -left-20"></div>
+  <div class="hero-glow-blob w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-teal-500/20 dark:bg-teal-500/15 bottom-10 right-0"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      
+      <!-- Left Column: Copy, Scramble Headline, Metrics & CTAs -->
+      <div class="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left">
+        
+        <!-- Top Tech Badge with Scramble Text Effect -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-cyan-500/30 shadow-sm shadow-cyan-500/10">
+          <span class="flex h-2 w-2 rounded-full bg-cyan-500 animate-ping"></span>
+          <span class="text-xs font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400 font-mono" data-scramble={t('hero.scramble')}>
+            {t('hero.scramble')}
+          </span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-4xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15] font-['Outfit']">
+          <span>{t('hero.title')}</span>
+          <span class="text-gradient-cyan block mt-1">{t('hero.titleHighlight')}</span>
+          <span class="block text-2xl sm:text-3xl xl:text-4xl font-semibold text-slate-700 dark:text-slate-300 mt-2 font-['Plus_Jakarta_Sans']">
+            {t('hero.titleEnd')}
+          </span>
+        </h1>
+
+        <!-- Subtitle description -->
+        <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+          {t('hero.description')}
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+          <a
+            href={`${getLocalizedPath('/', lang)}#contact`}
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-cyan-600 via-teal-600 to-sky-600 hover:from-cyan-500 hover:via-teal-500 hover:to-sky-500 shadow-xl shadow-cyan-600/30 hover:shadow-cyan-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          >
+            <Sparkles class="w-4 h-4 text-cyan-200" />
+            <span>{t('hero.ctaPrimary')}</span>
+          </a>
+
+          <a
+            href={`${getLocalizedPath('/', lang)}#treatments`}
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl text-sm font-bold tracking-wide text-slate-700 dark:text-slate-200 glass-panel hover:bg-slate-100 dark:hover:bg-white/10 hover:border-cyan-500/40 transition-all duration-300"
+          >
+            <span>{t('hero.ctaSecondary')}</span>
+            <ArrowRight class="w-4 h-4 text-cyan-500 transform group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
+
+        <!-- Trust Metrics Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-200/80 dark:border-white/10">
+          <div class="text-center lg:text-left">
+            <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-['Outfit']">
+              {t('hero.stats.patients')}
+            </div>
+            <div class="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">
+              {t('hero.stats.patientsLabel')}
+            </div>
+          </div>
+
+          <div class="text-center lg:text-left">
+            <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-['Outfit']">
+              {t('hero.stats.experience')}
+            </div>
+            <div class="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">
+              {t('hero.stats.experienceLabel')}
+            </div>
+          </div>
+
+          <div class="text-center lg:text-left">
+            <div class="text-2xl sm:text-3xl font-extrabold text-teal-600 dark:text-teal-400 font-['Outfit']">
+              {t('hero.stats.satisfaction')}
+            </div>
+            <div class="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">
+              {t('hero.stats.satisfactionLabel')}
+            </div>
+          </div>
+
+          <div class="text-center lg:text-left">
+            <div class="text-2xl sm:text-3xl font-extrabold text-cyan-600 dark:text-cyan-400 font-['Outfit']">
+              {t('hero.stats.technology')}
+            </div>
+            <div class="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">
+              {t('hero.stats.technologyLabel')}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive Motion Carousel / Showcase Cards -->
+      <div class="lg:col-span-5 relative">
+        
+        <!-- Carousel Frame -->
+        <div id="hero-carousel-container" class="relative group touch-pan-y select-none">
+          
+          <!-- Outer Decorative Glow Ring -->
+          <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500/30 via-teal-500/20 to-sky-500/30 blur-xl opacity-75 group-hover:opacity-100 transition duration-500"></div>
+
+          <!-- Slides Wrapper -->
+          <div class="relative rounded-3xl glass-panel-glow p-6 sm:p-8 overflow-hidden min-h-[460px] flex flex-col justify-between">
+            
+            <!-- Individual Slides -->
+            {slides.map((slide, idx) => (
+              <div
+                class={`carousel-slide transition-all duration-500 ease-out ${
+                  idx === 0 ? 'opacity-100 translate-x-0 relative z-10' : 'opacity-0 translate-x-12 absolute inset-0 p-6 sm:p-8 pointer-events-none'
+                }`}
+                data-slide-index={idx}
+              >
+                <!-- Top Badge & Counter -->
+                <div class="flex items-center justify-between mb-6">
+                  <span class={`inline-block px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border ${slide.badgeBg}`}>
+                    {slide.tag}
+                  </span>
+                  <span class="text-xs font-mono font-bold text-slate-600 dark:text-slate-400">
+                    0{idx + 1} / 0{slides.length}
+                  </span>
+                </div>
+
+                <!-- Slide Title with Graphic Icon -->
+                <div class="space-y-4 my-auto">
+                  <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-teal-500/20 border border-cyan-500/30 flex items-center justify-center">
+                    <Sparkles class="w-7 h-7 text-cyan-600 dark:text-cyan-400 animate-pulse" />
+                  </div>
+                  <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-['Outfit'] leading-snug">
+                    {slide.title}
+                  </h3>
+                  <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {slide.desc}
+                  </p>
+                </div>
+
+                <!-- Key Feature Pill -->
+                <div class="mt-8 pt-6 border-t border-slate-200/80 dark:border-white/10 flex items-center gap-3">
+                  <div class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                    <CheckCircle2 class="w-4 h-4" />
+                  </div>
+                  <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
+                    {slide.feature}
+                  </span>
+                </div>
+              </div>
+            ))}
+
+            <!-- Carousel Bottom Controls (Prev, Next, Indicators) -->
+            <div class="relative z-20 flex items-center justify-between pt-6 mt-4 border-t border-slate-200/60 dark:border-white/5">
+              <!-- Indicators -->
+              <div class="flex items-center gap-2">
+                {slides.map((_, idx) => (
+                  <button
+                    type="button"
+                    class={`carousel-indicator h-2 rounded-full transition-all duration-300 ${
+                      idx === 0 ? 'w-8 bg-cyan-500' : 'w-2 bg-slate-300 dark:bg-white/20 hover:bg-slate-400'
+                    }`}
+                    data-indicator-index={idx}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  ></button>
+                ))}
+              </div>
+
+              <!-- Nav Arrows -->
+              <div class="flex items-center gap-2">
+                <button
+                  id="carousel-prev-btn"
+                  type="button"
+                  class="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 hover:border-cyan-500/50 transition-colors focus:outline-none"
+                  aria-label="Previous Slide"
+                >
+                  <ChevronLeft class="w-4 h-4" />
+                </button>
+                <button
+                  id="carousel-next-btn"
+                  type="button"
+                  class="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 hover:border-cyan-500/50 transition-colors focus:outline-none"
+                  aria-label="Next Slide"
+                >
+                  <ChevronRight class="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  // Mobile-first, swipe-enabled carousel controller
+  const container = document.getElementById('hero-carousel-container');
+  const slides = document.querySelectorAll<HTMLElement>('.carousel-slide');
+  const indicators = document.querySelectorAll<HTMLElement>('.carousel-indicator');
+  const prevBtn = document.getElementById('carousel-prev-btn');
+  const nextBtn = document.getElementById('carousel-next-btn');
+
+  let activeIndex = 0;
+  const totalSlides = slides.length;
+  let autoplayTimer: any = null;
+
+  function showSlide(index: number) {
+    if (index < 0) index = totalSlides - 1;
+    if (index >= totalSlides) index = 0;
+    activeIndex = index;
+
+    slides.forEach((slide, idx) => {
+      if (idx === activeIndex) {
+        slide.classList.remove('opacity-0', 'translate-x-12', 'absolute', 'pointer-events-none');
+        slide.classList.add('opacity-100', 'translate-x-0', 'relative', 'z-10');
+      } else {
+        slide.classList.remove('opacity-100', 'translate-x-0', 'relative', 'z-10');
+        slide.classList.add('opacity-0', 'translate-x-12', 'absolute', 'pointer-events-none');
+      }
+    });
+
+    indicators.forEach((indicator, idx) => {
+      if (idx === activeIndex) {
+        indicator.classList.remove('w-2', 'bg-slate-300', 'dark:bg-white/20');
+        indicator.classList.add('w-8', 'bg-cyan-500');
+      } else {
+        indicator.classList.remove('w-8', 'bg-cyan-500');
+        indicator.classList.add('w-2', 'bg-slate-300', 'dark:bg-white/20');
+      }
+    });
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayTimer = setInterval(() => {
+      showSlide(activeIndex + 1);
+    }, 5500);
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  prevBtn?.addEventListener('click', () => {
+    showSlide(activeIndex - 1);
+    startAutoplay();
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    showSlide(activeIndex + 1);
+    startAutoplay();
+  });
+
+  indicators.forEach((indicator) => {
+    indicator.addEventListener('click', () => {
+      const idx = Number(indicator.getAttribute('data-indicator-index'));
+      showSlide(idx);
+      startAutoplay();
+    });
+  });
+
+  // Pause on hover
+  container?.addEventListener('mouseenter', stopAutoplay);
+  container?.addEventListener('mouseleave', startAutoplay);
+
+  // Mobile Touch Swipe Support
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  container?.addEventListener('touchstart', (e: TouchEvent) => {
+    touchStartX = e.changedTouches[0].screenX;
+    stopAutoplay();
+  }, { passive: true });
+
+  container?.addEventListener('touchend', (e: TouchEvent) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        // Swipe left -> Next
+        showSlide(activeIndex + 1);
+      } else {
+        // Swipe right -> Prev
+        showSlide(activeIndex - 1);
+      }
+    }
+    startAutoplay();
+  }, { passive: true });
+
+  // Init autoplay
+  startAutoplay();
+</script>

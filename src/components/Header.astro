@@ -1,0 +1,244 @@
+---
+import { defaultLang, languages, activeLocales, type SupportedLocale } from '../i18n/config';
+import { useTranslations, getLocalizedPath, switchLanguageUrl } from '../i18n/utils';
+import { Sun, Moon, Globe, Menu, X, ArrowRight, Sparkles, Phone } from '@lucide/astro';
+
+interface Props {
+  lang: SupportedLocale;
+  currentPath?: string;
+}
+
+const { lang = defaultLang } = Astro.props;
+const t = useTranslations(lang);
+const currentUrl = Astro.url;
+
+const navLinks = [
+  { name: t('nav.home'), href: getLocalizedPath('/', lang) },
+  { name: t('nav.treatments'), href: `${getLocalizedPath('/', lang)}#treatments` },
+  { name: t('nav.clinic'), href: `${getLocalizedPath('/', lang)}#clinic` },
+  { name: t('nav.doctor'), href: `${getLocalizedPath('/', lang)}#doctor` },
+  { name: t('nav.blog'), href: getLocalizedPath('/blog', lang) },
+  { name: t('nav.contact'), href: `${getLocalizedPath('/', lang)}#contact` },
+];
+---
+
+<header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/80 dark:bg-[#070B13]/85 border-b border-slate-200/80 dark:border-white/10 transition-colors duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      
+      <!-- Brand Logo -->
+      <a href={getLocalizedPath('/', lang)} class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-1">
+        <div class="relative w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-600 via-teal-500 to-sky-400 p-[1.5px] shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-all duration-300 group-hover:scale-105">
+          <div class="w-full h-full bg-white dark:bg-[#090E1A] rounded-[10px] flex items-center justify-center">
+            <!-- Modern Dental Emblem Icon -->
+            <svg class="w-6 h-6 text-cyan-600 dark:text-cyan-400 transform group-hover:rotate-6 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2C8.5 2 6 4.5 6 8c0 3.2 1.8 6.5 3 9.5 1 2.5 2 4.5 3 4.5s2-2 3-4.5c1.2-3 3-6.3 3-9.5 0-3.5-2.5-6-6-6z"/>
+              <path d="M12 2v6"/>
+              <path d="M9 10c1 1.5 2 2 3 2s2-.5 3-2"/>
+            </svg>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold tracking-tight text-xl text-slate-900 dark:text-white flex items-center gap-1.5 font-['Outfit']">
+            {t('brand.name')}
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
+          </span>
+          <span class="text-[11px] font-medium tracking-wider uppercase text-slate-700 dark:text-slate-400">
+            {t('brand.subtitle')}
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="px-3 py-2 text-sm font-medium text-slate-700 hover:text-cyan-600 dark:text-slate-300 dark:hover:text-cyan-400 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-colors duration-200"
+          >
+            {link.name}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Right Controls: Theme Toggle, Lang Switcher & Book CTA -->
+      <div class="hidden sm:flex items-center gap-3">
+        <!-- Theme Toggle Button -->
+        <button
+          id="theme-toggle-btn"
+          type="button"
+          aria-label={t('theme.toggle')}
+          class="relative p-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        >
+          <Sun class="w-5 h-5 hidden dark:block text-amber-300 transition-transform hover:rotate-45" />
+          <Moon class="w-5 h-5 block dark:hidden text-slate-700 transition-transform hover:-rotate-12" />
+        </button>
+
+        <!-- Language Selector -->
+        <div class="relative group">
+          <button
+            type="button"
+            class="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors focus:outline-none"
+            aria-expanded="false"
+          >
+            <Globe class="w-4 h-4 text-cyan-500" />
+            <span>{languages[lang].nativeName}</span>
+          </button>
+          
+          <!-- Dropdown -->
+          <div class="absolute right-0 mt-2 w-48 py-2 rounded-xl glass-panel shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div class="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-slate-600 dark:text-slate-400 border-b border-slate-200/60 dark:border-white/5">
+              {t('lang.switcher')}
+            </div>
+            {activeLocales.map((localeCode) => (
+              <a
+                href={switchLanguageUrl(currentUrl, localeCode)}
+                class={`flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${
+                  localeCode === lang
+                    ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-50/50 dark:bg-cyan-950/30 font-semibold'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
+              >
+                <span class="flex items-center gap-2">
+                  <span>{languages[localeCode].flag}</span>
+                  <span>{languages[localeCode].nativeName}</span>
+                </span>
+                {localeCode === lang && (
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+                )}
+              </a>
+            ))}
+            <!-- Future Locales Preview -->
+            <div class="mt-1 pt-1 border-t border-slate-200/40 dark:border-white/5 px-3 py-1 text-[10px] text-slate-600 dark:text-slate-400">
+              DE / AR / RU (Phase 2)
+            </div>
+          </div>
+        </div>
+
+        <!-- Priority Booking CTA -->
+        <a
+          href={`${getLocalizedPath('/', lang)}#contact`}
+          class="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-cyan-600 via-teal-600 to-sky-600 hover:from-cyan-500 hover:via-teal-500 hover:to-sky-500 shadow-md shadow-cyan-600/25 hover:shadow-cyan-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        >
+          <Sparkles class="w-3.5 h-3.5 text-cyan-200" />
+          <span>{t('nav.bookCta')}</span>
+        </a>
+      </div>
+
+      <!-- Mobile Controls (Theme + Hamburger) -->
+      <div class="flex items-center gap-2 lg:hidden">
+        <button
+          id="mobile-theme-toggle"
+          type="button"
+          class="p-2 rounded-lg text-slate-600 dark:text-slate-300"
+          aria-label={t('theme.toggle')}
+        >
+          <Sun class="w-5 h-5 hidden dark:block text-amber-300" />
+          <Moon class="w-5 h-5 block dark:hidden text-slate-700" />
+        </button>
+
+        <button
+          id="mobile-menu-btn"
+          type="button"
+          class="p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 focus:outline-none"
+          aria-label="Toggle Navigation Menu"
+        >
+          <Menu class="w-6 h-6" id="menu-icon-open" />
+          <X class="w-6 h-6 hidden" id="menu-icon-close" />
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile Slide-out Drawer -->
+  <div id="mobile-menu-drawer" class="lg:hidden hidden border-t border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[#070B13]/95 backdrop-blur-2xl px-6 py-6 transition-all duration-300">
+    <div class="flex flex-col space-y-3">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="mobile-nav-link text-base font-medium text-slate-800 dark:text-slate-200 hover:text-cyan-500 dark:hover:text-cyan-400 py-2 border-b border-slate-100 dark:border-white/5"
+        >
+          {link.name}
+        </a>
+      ))}
+
+      <!-- Mobile Language Switcher -->
+      <div class="pt-4 pb-2">
+        <span class="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-400 block mb-2">
+          {t('lang.switcher')}
+        </span>
+        <div class="flex gap-2">
+          {activeLocales.map((localeCode) => (
+            <a
+              href={switchLanguageUrl(currentUrl, localeCode)}
+              class={`flex-1 py-2 text-center text-xs font-semibold rounded-lg border transition-colors ${
+                localeCode === lang
+                  ? 'border-cyan-500 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-bold'
+                  : 'border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              {languages[localeCode].flag} {languages[localeCode].nativeName}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Mobile Book CTA -->
+      <a
+        href={`${getLocalizedPath('/', lang)}#contact`}
+        class="mobile-nav-link w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-cyan-600 via-teal-600 to-sky-600 shadow-lg shadow-cyan-600/30"
+      >
+        <Sparkles class="w-4 h-4 text-cyan-200" />
+        <span>{t('nav.bookCta')}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Mobile drawer toggle logic
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const drawer = document.getElementById('mobile-menu-drawer');
+  const openIcon = document.getElementById('menu-icon-open');
+  const closeIcon = document.getElementById('menu-icon-close');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+  if (menuBtn && drawer && openIcon && closeIcon) {
+    menuBtn.addEventListener('click', () => {
+      const isClosed = drawer.classList.contains('hidden');
+      if (isClosed) {
+        drawer.classList.remove('hidden');
+        openIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+      } else {
+        drawer.classList.add('hidden');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      }
+    });
+
+    mobileLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        drawer.classList.add('hidden');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      });
+    });
+  }
+
+  // Theme Toggle Handler
+  function toggleTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  }
+
+  document.getElementById('theme-toggle-btn')?.addEventListener('click', toggleTheme);
+  document.getElementById('mobile-theme-toggle')?.addEventListener('click', toggleTheme);
+</script>

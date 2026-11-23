@@ -1,0 +1,213 @@
+---
+import type { SupportedLocale } from '../i18n/config';
+import { useTranslations, getLocalizedPath } from '../i18n/utils';
+import { Sparkles, Clock, CheckCircle2, ArrowRight, ShieldCheck, Zap } from '@lucide/astro';
+
+interface Props {
+  lang: SupportedLocale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const categories = [
+  { id: 'all', label: t('treatments.filter.all') },
+  { id: 'aesthetic', label: t('treatments.filter.aesthetic') },
+  { id: 'surgical', label: t('treatments.filter.surgical') },
+  { id: 'ortho', label: t('treatments.filter.ortho') },
+  { id: 'general', label: t('treatments.filter.general') },
+];
+
+const treatments = [
+  {
+    id: 1,
+    name: t('treatment.1.name'),
+    category: 'aesthetic',
+    duration: t('treatment.1.duration'),
+    desc: t('treatment.1.desc'),
+    highlight: t('treatment.1.highlight'),
+    iconGradient: 'from-cyan-500 to-blue-500',
+  },
+  {
+    id: 2,
+    name: t('treatment.2.name'),
+    category: 'surgical',
+    duration: t('treatment.2.duration'),
+    desc: t('treatment.2.desc'),
+    highlight: t('treatment.2.highlight'),
+    iconGradient: 'from-teal-500 to-emerald-500',
+  },
+  {
+    id: 3,
+    name: t('treatment.3.name'),
+    category: 'ortho',
+    duration: t('treatment.3.duration'),
+    desc: t('treatment.3.desc'),
+    highlight: t('treatment.3.highlight'),
+    iconGradient: 'from-sky-500 to-indigo-500',
+  },
+  {
+    id: 4,
+    name: t('treatment.4.name'),
+    category: 'aesthetic',
+    duration: t('treatment.4.duration'),
+    desc: t('treatment.4.desc'),
+    highlight: t('treatment.4.highlight'),
+    iconGradient: 'from-amber-400 to-orange-500',
+  },
+  {
+    id: 5,
+    name: t('treatment.5.name'),
+    category: 'aesthetic',
+    duration: t('treatment.5.duration'),
+    desc: t('treatment.5.desc'),
+    highlight: t('treatment.5.highlight'),
+    iconGradient: 'from-violet-500 to-purple-500',
+  },
+  {
+    id: 6,
+    name: t('treatment.6.name'),
+    category: 'general',
+    duration: t('treatment.6.duration'),
+    desc: t('treatment.6.desc'),
+    highlight: t('treatment.6.highlight'),
+    iconGradient: 'from-emerald-500 to-teal-500',
+  },
+];
+---
+
+<section id="treatments" class="py-20 lg:py-28 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16 reveal-item">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider mb-4">
+        <Sparkles class="w-3.5 h-3.5" />
+        <span>{t('treatments.badge')}</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-['Outfit'] tracking-tight">
+        {t('treatments.title')}
+      </h2>
+      <p class="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+        {t('treatments.description')}
+      </p>
+
+      <!-- Category Filter Pills -->
+      <div class="flex flex-wrap items-center justify-center gap-2 mt-8" id="treatment-filter-bar">
+        {categories.map((cat, idx) => (
+          <button
+            type="button"
+            class={`treatment-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all duration-200 focus:outline-none ${
+              idx === 0
+                ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30'
+                : 'glass-panel text-slate-700 dark:text-slate-300 hover:border-cyan-500/40 hover:text-cyan-600 dark:hover:text-cyan-400'
+            }`}
+            data-filter={cat.id}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Treatment Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" id="treatment-grid">
+      {treatments.map((item) => (
+        <div
+          class="treatment-card reveal-item group relative rounded-3xl glass-panel p-7 flex flex-col justify-between hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 hover:-translate-y-1.5"
+          data-category={item.category}
+        >
+          <!-- Card Header & Badge -->
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div class={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${item.iconGradient} text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                <Zap class="w-6 h-6" />
+              </div>
+
+              <!-- Duration Badge -->
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300">
+                <Clock class="w-3.5 h-3.5 text-cyan-500" />
+                <span>{item.duration}</span>
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white font-['Outfit'] group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+              {item.name}
+            </h3>
+
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+
+          <!-- Card Bottom Highlight & Direct Booking Link -->
+          <div class="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10">
+            <div class="flex items-center gap-2 mb-4 text-xs font-medium text-teal-600 dark:text-teal-400">
+              <CheckCircle2 class="w-4 h-4 flex-shrink-0" />
+              <span>{item.highlight}</span>
+            </div>
+
+            <a
+              href={`${getLocalizedPath('/', lang)}#contact`}
+              class="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 transition-all group-hover:border-cyan-500/40"
+              data-treatment-select={item.name}
+            >
+              <span>{t('treatments.bookThis')}</span>
+              <ArrowRight class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  // Filter button interactions
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>('.treatment-filter-btn');
+  const cards = document.querySelectorAll<HTMLElement>('.treatment-card');
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+
+      // Update button active styles
+      filterButtons.forEach((b) => {
+        b.classList.remove('bg-cyan-600', 'text-white', 'shadow-md', 'shadow-cyan-600/30');
+        b.classList.add('glass-panel', 'text-slate-700', 'dark:text-slate-300');
+      });
+
+      btn.classList.add('bg-cyan-600', 'text-white', 'shadow-md', 'shadow-cyan-600/30');
+      btn.classList.remove('glass-panel', 'text-slate-700', 'dark:text-slate-300');
+
+      // Filter cards
+      cards.forEach((card) => {
+        const cat = card.getAttribute('data-category');
+        if (filter === 'all' || filter === cat) {
+          card.style.display = 'flex';
+          card.classList.add('revealed');
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Clicking "Danışın" fills service in appointment form
+  document.querySelectorAll('[data-treatment-select]').forEach((link) => {
+    link.addEventListener('click', () => {
+      const treatmentName = link.getAttribute('data-treatment-select');
+      const selectEl = document.getElementById('appointment-service') as HTMLSelectElement | null;
+      if (selectEl && treatmentName) {
+        // Find matching option or set value
+        for (let i = 0; i < selectEl.options.length; i++) {
+          if (selectEl.options[i].text.toLowerCase().includes(treatmentName.toLowerCase().split(' ')[0])) {
+            selectEl.selectedIndex = i;
+            break;
+          }
+        }
+      }
+    });
+  });
+</script>

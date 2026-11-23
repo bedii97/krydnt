@@ -1,0 +1,154 @@
+---
+import { getCollection } from 'astro:content';
+import type { SupportedLocale } from '../i18n/config';
+import { useTranslations, getLocalizedPath } from '../i18n/utils';
+import { BookOpen, Calendar, Clock, ArrowRight, MessageSquare, Sparkles, User } from '@lucide/astro';
+
+interface Props {
+  lang: SupportedLocale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Get latest 3 blog articles for current locale, sorted by pubDate descending
+const allPosts = await getCollection('blog', ({ data }) => data.lang === lang);
+const recentPosts = allPosts
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+
+function formatDate(date: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale === 'tr' ? 'tr-TR' : 'en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+}
+
+function getPostSlug(post: any): string {
+  // post.id contains e.g. "tr/hafta-47-dijital-gulus-tasarimi.md"
+  const cleanId = post.id.replace(/\.(md|mdx)$/, '');
+  const segments = cleanId.split('/');
+  return segments[segments.length - 1];
+}
+---
+
+<section id="blog" class="py-20 lg:py-28 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 reveal-item">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider mb-4">
+          <BookOpen class="w-3.5 h-3.5" />
+          <span>{t('blog.badge')}</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-['Outfit'] tracking-tight">
+          {t('blog.title')}
+        </h2>
+        <p class="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+          {t('blog.description')}
+        </p>
+      </div>
+
+      <div class="mt-6 md:mt-0">
+        <a
+          href={getLocalizedPath('/blog', lang)}
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold tracking-wide text-cyan-700 dark:text-cyan-300 glass-panel hover:bg-slate-100 dark:hover:bg-white/10 hover:border-cyan-500/40 transition-all duration-300 group"
+        >
+          <span>{t('blog.viewAll')}</span>
+          <ArrowRight class="w-4 h-4 text-cyan-500 transform group-hover:translate-x-1 transition-transform" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Blog Articles Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      {recentPosts.map((post) => {
+        const slug = getPostSlug(post);
+        const postUrl = getLocalizedPath(`/blog/${slug}`, lang);
+
+        return (
+          <article class="reveal-item group relative rounded-3xl glass-panel p-6 sm:p-7 flex flex-col justify-between hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 hover:-translate-y-1.5">
+            <div>
+              <!-- Top Badges: Week Number + Category -->
+              <div class="flex items-center justify-between mb-4">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30">
+                  <Sparkles class="w-3 h-3 text-cyan-500" />
+                  <span>{lang === 'tr' ? `Hafta ${post.data.weekNumber}` : `Week ${post.data.weekNumber}`}</span>
+                </span>
+
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                  {post.data.category}
+                </span>
+              </div>
+
+              <!-- Article Title -->
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white font-['Outfit'] leading-snug group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                <a href={postUrl}>
+                  {post.data.title}
+                </a>
+              </h3>
+
+              <!-- Article Excerpt -->
+              <p class="mt-3 text-sm text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+                {post.data.description}
+              </p>
+            </div>
+
+            <!-- Footer Details -->
+            <div class="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10">
+              <div class="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4">
+                <div class="flex items-center gap-1.5">
+                  <Calendar class="w-3.5 h-3.5 text-cyan-500" />
+                  <span>{formatDate(post.data.pubDate, lang)}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <Clock class="w-3.5 h-3.5 text-cyan-500" />
+                  <span>{post.data.readingTime}</span>
+                </div>
+              </div>
+
+              <!-- Author & Read CTA -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-[10px] font-bold">
+                    KA
+                  </div>
+                  <span class="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    {post.data.author}
+                  </span>
+                </div>
+
+                <a
+                  href={postUrl}
+                  class="inline-flex items-center gap-1 text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 transition-colors"
+                >
+                  <span>Oku</span>
+                  <ArrowRight class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                </a>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <!-- Community Hook Notice (Roadmap to Phase 2) -->
+    <div class="mt-12 p-5 rounded-2xl glass-panel border border-cyan-500/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left reveal-item">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+          <MessageSquare class="w-5 h-5" />
+        </div>
+        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium">
+          {t('blog.communityNotice')}
+        </p>
+      </div>
+
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 whitespace-nowrap">
+        Phase 2 Roadmap
+      </span>
+    </div>
+
+  </div>
+</section>

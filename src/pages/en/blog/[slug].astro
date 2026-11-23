@@ -1,0 +1,173 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import { useTranslations, getLocalizedPath } from '../../../i18n/utils';
+import { Calendar, Clock, ArrowLeft, Sparkles, User, Tag, MessageSquare, Share2, CheckCircle2 } from '@lucide/astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => data.lang === 'en');
+  return posts.map((post) => {
+    const cleanId = post.id.replace(/\.(md|mdx)$/, '');
+    const segments = cleanId.split('/');
+    const slug = segments[segments.length - 1];
+    return {
+      params: { slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const lang = 'en';
+const t = useTranslations(lang);
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+}
+---
+
+<Layout
+  lang={lang}
+  title={`${post.data.title} | Koray Dental Studio Blog`}
+  description={post.data.description}
+  currentPath={`/en/blog/${Astro.params.slug}`}
+>
+  <article class="py-16 sm:py-24 relative overflow-hidden">
+    
+    <!-- Ambient aura glow -->
+    <div class="hero-glow-blob w-[500px] h-[500px] bg-cyan-500/10 top-10 right-1/4"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- Back Link -->
+      <div class="mb-8">
+        <a
+          href={getLocalizedPath('/blog', lang)}
+          class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+        >
+          <ArrowLeft class="w-4 h-4" />
+          <span>Back to All Weekly Articles</span>
+        </a>
+      </div>
+
+      <!-- Article Header -->
+      <header class="space-y-6 pb-10 border-b border-slate-200/80 dark:border-white/10">
+        <!-- Week Badge & Category -->
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30">
+            <Sparkles class="w-3.5 h-3.5 text-cyan-500" />
+            <span>Week {post.data.weekNumber}</span>
+          </span>
+
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10">
+            {post.data.category}
+          </span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-['Outfit'] leading-tight tracking-tight">
+          {post.data.title}
+        </h1>
+
+        <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+          {post.data.description}
+        </p>
+
+        <!-- Author, Date, Reading Time Metadata Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pt-4 text-xs text-slate-600 dark:text-slate-400">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center font-bold text-sm shadow-md">
+              KA
+            </div>
+            <div>
+              <div class="font-bold text-slate-900 dark:text-white text-sm">
+                {post.data.author}
+              </div>
+              <div class="text-[11px] text-cyan-600 dark:text-cyan-400">
+                {post.data.authorRole}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-5">
+            <div class="flex items-center gap-1.5">
+              <Calendar class="w-4 h-4 text-cyan-500" />
+              <span>{formatDate(post.data.pubDate)}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <Clock class="w-4 h-4 text-cyan-500" />
+              <span>{post.data.readingTime} read time</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Markdown Prose Content -->
+      <div class="py-12 prose dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 leading-relaxed prose-headings:font-['Outfit'] prose-headings:font-bold prose-headings:tracking-tight prose-a:text-cyan-600 dark:prose-a:text-cyan-400 prose-blockquote:border-cyan-500 prose-blockquote:bg-cyan-500/5 dark:prose-blockquote:bg-cyan-500/10 prose-blockquote:p-4 prose-blockquote:rounded-r-2xl prose-blockquote:not-italic">
+        <Content />
+      </div>
+
+      <!-- Article Tags -->
+      <div class="pt-8 pb-12 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center gap-2">
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 mr-2">Tags:</span>
+        {post.data.tags.map((tag) => (
+          <span class="text-xs px-3 py-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300">
+            #{tag}
+          </span>
+        ))}
+      </div>
+
+      <!-- Direct Clinic Appointment Banner -->
+      <div class="my-10 p-8 rounded-3xl glass-panel-glow border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+        <div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white font-['Outfit']">
+            Considering This Treatment?
+          </h3>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+            Schedule a virtual or in-person consultation with Dr. Koray Altun.
+          </p>
+        </div>
+
+        <a
+          href={`${getLocalizedPath('/', lang)}#contact`}
+          class="px-6 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 shadow-lg shadow-cyan-600/30 whitespace-nowrap transition-all"
+        >
+          Book Consultation
+        </a>
+      </div>
+
+      <!-- Phase 2 Moderated Patient Experience / Community Hook -->
+      <div class="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-white/10 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <MessageSquare class="w-5 h-5 text-teal-500" />
+            <h4 class="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white font-['Outfit']">
+              Patient Experiences & Clinical Q&A (Community Module)
+            </h4>
+          </div>
+          <span class="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-teal-500/15 text-teal-700 dark:text-teal-300 font-bold border border-teal-500/30">
+            Phase 2
+          </span>
+        </div>
+
+        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          Verified patient recovery journals, peer discussions, and moderated doctor Q&As will unlock here in Phase 2. The underlying schema and permissions are already structured to support this integration seamlessly.
+        </p>
+
+        <div class="pt-2 flex items-center gap-4 text-xs text-slate-600 dark:text-slate-400">
+          <span class="flex items-center gap-1 text-teal-600 dark:text-teal-400 font-semibold">
+            <CheckCircle2 class="w-3.5 h-3.5" /> Clinically Moderated Platform
+          </span>
+          <span>•</span>
+          <span>Anonymous or Verified Profiles</span>
+        </div>
+      </div>
+
+    </div>
+
+  </article>
+</Layout>

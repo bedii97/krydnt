@@ -1,0 +1,118 @@
+---
+import '../styles/global.css';
+import { defaultLang, languages, type SupportedLocale } from '../i18n/config';
+import { useTranslations, getLocalizedPath } from '../i18n/utils';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: SupportedLocale;
+  currentPath?: string;
+}
+
+const {
+  lang = defaultLang,
+  title,
+  description,
+  currentPath = '',
+} = Astro.props;
+
+const t = useTranslations(lang);
+const metaTitle = title || t('meta.title');
+const metaDescription = description || t('meta.description');
+const currentLangMeta = languages[lang] || languages[defaultLang];
+---
+
+<!doctype html>
+<html lang={lang} dir={currentLangMeta.dir} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site || 'https://koraydental.com').href} />
+
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- SEO Meta Tags -->
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <meta name="theme-color" content="#070B13" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:site_name" content="Koray Dental Studio" />
+    <meta property="og:locale" content={lang === 'tr' ? 'tr_TR' : 'en_US'} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={metaTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+
+    <!-- Anti-FOUC Theme Detection Script -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-white">
+    
+    <!-- Ambient Cursor Glow Effect (Safe for touch/mobile devices) -->
+    <div
+      id="cursor-ambient-glow"
+      class="fixed top-0 left-0 w-[500px] h-[500px] rounded-full pointer-events-none -z-10 opacity-70 blur-[110px] bg-gradient-to-tr from-cyan-500/25 via-teal-400/20 to-transparent transition-opacity duration-500 will-change-transform"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Navigation Header -->
+    <Header lang={lang} currentPath={currentPath} />
+
+    <!-- Main Content Slot -->
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <Footer lang={lang} />
+
+    <!-- Floating Localized WhatsApp Action -->
+    <FloatingWhatsApp lang={lang} />
+
+    <!-- Client-side Interactive Animations Initializer -->
+    <script>
+      import { initCursorGlow } from '../scripts/cursorGlow';
+      import { initScrambleElements } from '../scripts/scrambleText';
+      import { initScrollReveal } from '../scripts/scrollReveal';
+
+      // Initialize interactive features
+      document.addEventListener('DOMContentLoaded', () => {
+        initCursorGlow();
+        initScrambleElements();
+        initScrollReveal();
+      });
+
+      // Handle Astro view transitions or dynamic DOM updates
+      document.addEventListener('astro:page-load', () => {
+        initCursorGlow();
+        initScrambleElements();
+        initScrollReveal();
+      });
+    </script>
+  </body>
+</html>

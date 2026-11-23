@@ -1,0 +1,113 @@
+---
+import type { SupportedLocale } from '../i18n/config';
+import { useTranslations, getLocalizedPath } from '../i18n/utils';
+import { Award, ShieldCheck, Sparkles, CheckCircle2, GraduationCap, HeartHandshake } from '@lucide/astro';
+
+interface Props {
+  lang: SupportedLocale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="doctor" class="py-20 lg:py-28 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="relative rounded-3xl glass-panel p-8 sm:p-12 lg:p-16 border border-slate-200/80 dark:border-white/10 overflow-hidden reveal-item">
+      
+      <!-- Subtle background radial sheen -->
+      <div class="absolute -top-32 -right-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        
+        <!-- Left: Doctor Avatar / Emblem Card -->
+        <div class="lg:col-span-5 flex flex-col items-center text-center">
+          <div class="relative group">
+            <!-- Outer Glow -->
+            <div class="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-cyan-500 via-teal-500 to-sky-500 blur-lg opacity-60 group-hover:opacity-100 transition duration-500"></div>
+
+            <!-- Stylized Doctor Portrait Box -->
+            <div class="relative w-64 h-72 sm:w-72 sm:h-80 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/20 p-6 flex flex-col items-center justify-center text-white shadow-2xl">
+              <!-- Doctor Illustration Emblem -->
+              <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-teal-400 p-1 shadow-lg shadow-cyan-500/30 mb-4">
+                <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center">
+                  <GraduationCap class="w-10 h-10 text-cyan-300" />
+                </div>
+              </div>
+
+              <div class="text-xl font-bold font-['Outfit'] tracking-tight">
+                {t('doctor.name')}
+              </div>
+              <div class="text-xs text-cyan-400 font-medium mt-1">
+                {t('doctor.role')}
+              </div>
+
+              <!-- Experience & Memberships Pill -->
+              <div class="mt-5 pt-4 border-t border-white/10 w-full flex items-center justify-around text-center">
+                <div>
+                  <div class="text-lg font-bold font-mono text-white">18+</div>
+                  <div class="text-[10px] uppercase text-slate-400">Yıl Deneyim</div>
+                </div>
+                <div class="h-6 w-[1px] bg-white/10"></div>
+                <div>
+                  <div class="text-lg font-bold font-mono text-teal-400">Goethe</div>
+                  <div class="text-[10px] uppercase text-slate-400">MSc Frankfurt</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor Accreditation Badges -->
+          <div class="flex flex-wrap justify-center gap-2 mt-6">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20">
+              <Award class="w-3.5 h-3.5" />
+              <span>EAO Aktif Üyesi</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20">
+              <ShieldCheck class="w-3.5 h-3.5" />
+              <span>AACD Kozmetik Diş</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Doctor Bio, Philosophy & Direct Quote -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider">
+            <Award class="w-3.5 h-3.5" />
+            <span>{t('doctor.badge')}</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-['Outfit'] tracking-tight">
+            {t('doctor.title')}
+          </h2>
+
+          <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            {t('doctor.bio')}
+          </p>
+
+          <!-- Philosophy Quote Card -->
+          <div class="relative p-6 rounded-2xl bg-cyan-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 italic text-slate-800 dark:text-cyan-100 font-medium text-sm sm:text-base leading-relaxed">
+            <p>{t('doctor.quote')}</p>
+          </div>
+
+          <!-- Key Accreditations List -->
+          <div class="space-y-2 pt-2">
+            <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+              <CheckCircle2 class="w-4 h-4 text-cyan-500 flex-shrink-0" />
+              <span>{t('doctor.credentials')}</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
+              <CheckCircle2 class="w-4 h-4 text-teal-500 flex-shrink-0" />
+              <span>DSD (Digital Smile Design) Sertifikalı Master Klinisyen</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
